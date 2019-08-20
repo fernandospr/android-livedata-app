@@ -3,9 +3,11 @@ package com.github.fernandospr.livedataapplication
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
@@ -34,7 +36,22 @@ class SampleViewModel(private val sleepSampleMillis: Long = 5000) : ViewModel() 
         )
     }
 
-    private fun expensiveOperation(value: Int): Single<MyResource> {
+    private fun expensiveOperation(value: Int) =
+        firstExpensiveOperation(value)
+            .flatMap { secondExpensiveOperation(it) }
+
+
+    private fun firstExpensiveOperation(value: Int): Single<Int> {
+        return Single.fromCallable {
+            Thread.sleep(sleepSampleMillis)
+            value
+        }
+            .doOnSubscribe { println("Executing first expensive operation...") }
+            .doOnSuccess { println("First expensive operation success!") }
+            .doOnError { println("First expensive operation error!") }
+    }
+
+    private fun secondExpensiveOperation(value: Int): Single<MyResource> {
         return Single.fromCallable {
             Thread.sleep(sleepSampleMillis)
             if (value > 1) {
@@ -42,6 +59,9 @@ class SampleViewModel(private val sleepSampleMillis: Long = 5000) : ViewModel() 
             }
             MyResource("Fernando")
         }
+            .doOnSubscribe { println("Executing second expensive operation...") }
+            .doOnSuccess { println("Second expensive operation success!") }
+            .doOnError { println("Second expensive operation error!") }
     }
 
     fun operationResultingInAction(value: Int) {
