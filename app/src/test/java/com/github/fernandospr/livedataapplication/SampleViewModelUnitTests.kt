@@ -9,7 +9,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class SampleUnitTest {
+class SampleViewModelUnitTests {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -33,14 +33,14 @@ class SampleUnitTest {
     }
 
     @Test
-    fun fetchResource_shouldShowLoading() {
+    fun `Fetch resource should show loading`() {
         viewModel.fetchResource(1)
 
         verify(resourceObserver).onChanged(eq(SampleResource.Loading))
     }
 
     @Test
-    fun fetchResource_shouldShowSuccess() {
+    fun `Fetch resource should show success`() {
         viewModel.fetchResource(1)
 
         val expected = SampleResource.SuccessWithParams(MyResource("Fernando"))
@@ -48,7 +48,7 @@ class SampleUnitTest {
     }
 
     @Test
-    fun fetchResource_shouldShowError() {
+    fun `Fetch resource should show error`() {
         viewModel.fetchResource(2)
 
         val expected = SampleResource.Error("This is an exception")
@@ -56,7 +56,7 @@ class SampleUnitTest {
     }
 
     @Test
-    fun operation_shouldResultInAction1() {
+    fun `Operation should result in Action1`() {
         viewModel.operationResultingInAction(1)
 
         val expected = SampleAction.Action1
@@ -64,7 +64,7 @@ class SampleUnitTest {
     }
 
     @Test
-    fun operation_shouldResultInAction2() {
+    fun `Operation should result in Action2`() {
         viewModel.operationResultingInAction(2)
 
         val expected = SampleAction.Action2WithParams("Hello", "World")
