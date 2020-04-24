@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class BlankViewModel : ViewModel() {
-    val first = MutableLiveData<Boolean>().apply { value = false }
-    val second = MutableLiveData<Boolean>().apply { value = false }
+    val first = MutableLiveData<Boolean>(false)
+    val second = MutableLiveData<Boolean>(false)
 
     val enabled = MediatorLiveData<Boolean>().apply {
         addSource(first) { value = validateAll() }
